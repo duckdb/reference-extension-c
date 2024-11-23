@@ -3,7 +3,7 @@
 PROJ_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 # Main extension configuration
-EXTENSION_NAME=capi_quack
+EXTENSION_NAME=reference_extension_c
 MINIMUM_DUCKDB_VERSION_MAJOR=0
 MINIMUM_DUCKDB_VERSION_MINOR=0
 MINIMUM_DUCKDB_VERSION_PATCH=1

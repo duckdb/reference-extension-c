@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
+
+cmake_policy(SET CMP0042 NEW)
+
 option(DUCKDB_WASM_EXTENSIONS "Whether compiling for Wasm target" OFF)
 
 ###
@@ -22,10 +25,17 @@ add_definitions(-DDUCKDB_EXTENSION_NAME=${EXTENSION_NAME})
 ###
 project(${EXTENSION_NAME} LANGUAGES C)
 
+# Include own headers
+include_directories(src/include)
+# Include DuckDB C API headers
+include_directories(duckdb_capi)
+
+add_subdirectory(src)
+
 # Create Extension library
 set(EXTENSION_SOURCES
-        src/add_numbers.c
-        src/capi_quack.c
+        ${ALL_OBJECT_FILES}
+        src/main.c
 )
 
 if (DUCKDB_WASM_EXTENSION)
@@ -40,9 +50,3 @@ set(CMAKE_C_VISIBILITY_PRESET hidden)
 set(VISIBILITY_INLINES_HIDDEN ON)
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
-
-# Include own headers
-target_include_directories(${EXTENSION_NAME} PRIVATE src/include)
-
-# Include DuckDB C API headers
-target_include_directories(${EXTENSION_NAME} PRIVATE duckdb_capi)
