@@ -25,6 +25,8 @@ add_definitions(-DDUCKDB_EXTENSION_NAME=${EXTENSION_NAME})
 ###
 project(${EXTENSION_NAME} LANGUAGES C)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # Include own headers
 include_directories(src/include)
 # Include DuckDB C API headers
