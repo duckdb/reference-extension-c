@@ -15,7 +15,7 @@ void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_v
 
     // NOTE: For simplicity, we assume there are no NULL values.
     // See CountNULL for NULL value handling.
-	for (idx_t row = 0; row < input_size; row++) {
+    for (idx_t row = 0; row < input_size; row++) {
         duckdb_string_t input_char = input_data[row];
 
         // Determine the result string length.
@@ -39,7 +39,7 @@ void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_v
         // Assign and free.
         duckdb_vector_assign_string_element_len(output, row, result, result_len);
         free(result);
-	}
+    }
 }
 
 duckdb_state RegisterExtraInfoScalarFunction(duckdb_connection connection) {
@@ -47,18 +47,18 @@ duckdb_state RegisterExtraInfoScalarFunction(duckdb_connection connection) {
     duckdb_scalar_function_set_name(function, "capi_extra_info_scalar_function");
 
     char *prefix = (char *)malloc(8);
-	strcpy(prefix, "prefix_");
+    strcpy(prefix, "prefix_");
 
-	duckdb_logical_type type = duckdb_create_logical_type(DUCKDB_TYPE_VARCHAR);
-	duckdb_scalar_function_add_parameter(function, type);
-	duckdb_scalar_function_set_return_type(function, type);
-	duckdb_destroy_logical_type(&type);
+    duckdb_logical_type type = duckdb_create_logical_type(DUCKDB_TYPE_VARCHAR);
+    duckdb_scalar_function_add_parameter(function, type);
+    duckdb_scalar_function_set_return_type(function, type);
+    duckdb_destroy_logical_type(&type);
 
-	duckdb_scalar_function_set_function(function, AppendToPrefix);
-	duckdb_scalar_function_set_extra_info(function, (duckdb_function_info)prefix, free);
+    duckdb_scalar_function_set_function(function, AppendToPrefix);
+    duckdb_scalar_function_set_extra_info(function, (duckdb_function_info)prefix, free);
 
     duckdb_state state = duckdb_register_scalar_function(connection, function);
-	duckdb_destroy_scalar_function(&function);
+    duckdb_destroy_scalar_function(&function);
     return state;
 }
 
