@@ -161,24 +161,23 @@ void CountNULL(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector
 }
 
 duckdb_state RegisterVariadicAnyScalarFunction(duckdb_connection connection) {
-    return DuckDBSuccess;
-//    duckdb_scalar_function function = duckdb_create_scalar_function();
-//    duckdb_scalar_function_set_name(function, "capi_variadic_any_scalar_function");
-//
-//    duckdb_logical_type any_type = duckdb_create_logical_type(DUCKDB_TYPE_ANY);
-//    duckdb_scalar_function_set_varargs(function, any_type);
-//    duckdb_destroy_logical_type(&any_type);
-//
-//    duckdb_scalar_function_set_special_handling(function);
-//    duckdb_scalar_function_set_volatile(function);
-//
-//    duckdb_logical_type return_type = duckdb_create_logical_type(DUCKDB_TYPE_UBIGINT);
-//    duckdb_scalar_function_set_return_type(function, return_type);
-//    duckdb_destroy_logical_type(&return_type);
-//
-//    duckdb_scalar_function_set_function(function, CountNULL);
-//
-//    duckdb_state state = duckdb_register_scalar_function(connection, function);
-//    duckdb_destroy_scalar_function(&function);
-//    return state;
+    duckdb_scalar_function function = duckdb_create_scalar_function();
+    duckdb_scalar_function_set_name(function, "capi_variadic_any_scalar_function");
+
+    duckdb_logical_type any_type = duckdb_create_logical_type(DUCKDB_TYPE_ANY);
+    duckdb_scalar_function_set_varargs(function, any_type);
+    duckdb_destroy_logical_type(&any_type);
+
+    duckdb_scalar_function_set_special_handling(function);
+    duckdb_scalar_function_set_volatile(function);
+
+    duckdb_logical_type return_type = duckdb_create_logical_type(DUCKDB_TYPE_UBIGINT);
+    duckdb_scalar_function_set_return_type(function, return_type);
+    duckdb_destroy_logical_type(&return_type);
+
+    duckdb_scalar_function_set_function(function, CountNULL);
+
+    duckdb_state state = duckdb_register_scalar_function(connection, function);
+    duckdb_destroy_scalar_function(&function);
+    return state;
 }
