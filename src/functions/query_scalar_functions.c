@@ -4,6 +4,8 @@
 
 DUCKDB_EXTENSION_EXTERN
 
+// FIXME: strcpy causes a warning on Windows. C99 does not have strcpy_s.
+
 void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector output) {
     const char *extra_info = (const char *)duckdb_scalar_function_get_extra_info(info);
     idx_t extra_info_len = 7;
@@ -46,7 +48,7 @@ duckdb_state RegisterExtraInfoScalarFunction(duckdb_connection connection) {
     duckdb_scalar_function function = duckdb_create_scalar_function();
     duckdb_scalar_function_set_name(function, "capi_extra_info_scalar_function");
 
-    char *prefix = (char *)malloc(8);
+    char *prefix = (char *)malloc(8 * sizeof(char));
     strcpy(prefix, "prefix_");
 
     duckdb_logical_type type = duckdb_create_logical_type(DUCKDB_TYPE_VARCHAR);
@@ -66,7 +68,7 @@ void VariadicAddition(duckdb_function_info info, duckdb_data_chunk input, duckdb
     idx_t input_size = duckdb_data_chunk_get_size(input);
     idx_t column_count = duckdb_data_chunk_get_column_count(input);
 
-    int64_t *data_ptrs[column_count];
+    int64_t **data_ptrs = malloc(column_count * sizeof(int64_t *));
     for (idx_t i = 0; i < column_count; i++) {
         duckdb_vector col = duckdb_data_chunk_get_vector(input, i);
         data_ptrs[i] = (int64_t *)duckdb_vector_get_data(col);
@@ -82,6 +84,7 @@ void VariadicAddition(duckdb_function_info info, duckdb_data_chunk input, duckdb
             result_data[row_idx] += data;
         }
     }
+    free(data_ptrs);
 }
 
 duckdb_scalar_function GetVariadicAdditionScalarFunction(duckdb_connection connection, const char *name, idx_t parameter_count) {
@@ -126,7 +129,7 @@ void CountNULL(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector
     }
 
     // Extract the validity masks.
-    uint64_t *validity_masks[column_count];
+    uint64_t **validity_masks = malloc(column_count * sizeof(uint64_t *));
     for (idx_t i = 0; i < column_count; i++) {
         duckdb_vector col = duckdb_data_chunk_get_vector(input, i);
         validity_masks[i] = duckdb_vector_get_validity(col);
@@ -142,6 +145,7 @@ void CountNULL(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector
         }
         result_data[row_idx] = null_count;
     }
+    free(validity_masks);
 }
 
 duckdb_state RegisterVariadicAnyScalarFunction(duckdb_connection connection) {
