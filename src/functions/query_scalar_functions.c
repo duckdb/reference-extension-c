@@ -65,31 +65,31 @@ duckdb_state RegisterExtraInfoScalarFunction(duckdb_connection connection) {
 }
 
 void VariadicAddition(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector output) {
-    idx_t input_size = duckdb_data_chunk_get_size(input);
-    idx_t column_count = duckdb_data_chunk_get_column_count(input);
+//    idx_t input_size = duckdb_data_chunk_get_size(input);
+//    idx_t column_count = duckdb_data_chunk_get_column_count(input);
 
-    int64_t **data_ptrs = (int64_t **)malloc(column_count * sizeof(int64_t *));
-    if (data_ptrs == NULL) {
-        duckdb_function_set_error(info, "data_ptrs does not work");
-        return;
-    }
+//    int64_t **data_ptrs = (int64_t **)malloc(column_count * sizeof(int64_t *));
+//    if (data_ptrs == NULL) {
+//        duckdb_function_set_error(info, "data_ptrs does not work");
+//        return;
+//    }
 
-    for (idx_t i = 0; i < column_count; i++) {
-        duckdb_vector col = duckdb_data_chunk_get_vector(input, i);
-        data_ptrs[i] = (int64_t *)duckdb_vector_get_data(col);
-    }
-
-    // NOTE: For simplicity, we assume there are no NULL values.
-    // See CountNULL for NULL value handling.
-    int64_t *result_data = (int64_t *)duckdb_vector_get_data(output);
-    for (idx_t row_idx = 0; row_idx < input_size; row_idx++) {
-        result_data[row_idx] = 0;
-        for (idx_t col_idx = 0; col_idx < column_count; col_idx++) {
-            int64_t data = data_ptrs[col_idx][row_idx];
-            result_data[row_idx] += data;
-        }
-    }
-    free(data_ptrs);
+//    for (idx_t i = 0; i < column_count; i++) {
+//        duckdb_vector col = duckdb_data_chunk_get_vector(input, i);
+//        data_ptrs[i] = (int64_t *)duckdb_vector_get_data(col);
+//    }
+//
+//    // NOTE: For simplicity, we assume there are no NULL values.
+//    // See CountNULL for NULL value handling.
+//    int64_t *result_data = (int64_t *)duckdb_vector_get_data(output);
+//    for (idx_t row_idx = 0; row_idx < input_size; row_idx++) {
+//        result_data[row_idx] = 0;
+//        for (idx_t col_idx = 0; col_idx < column_count; col_idx++) {
+//            int64_t data = data_ptrs[col_idx][row_idx];
+//            result_data[row_idx] += data;
+//        }
+//    }
+//    free(data_ptrs);
 }
 
 duckdb_scalar_function GetVariadicAdditionScalarFunction(duckdb_connection connection, const char *name, idx_t parameter_count) {
@@ -124,38 +124,38 @@ duckdb_state RegisterScalarFunctionSetFunction(duckdb_connection connection) {
 }
 
 void CountNULL(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector output) {
-    idx_t input_size = duckdb_data_chunk_get_size(input);
-    idx_t column_count = duckdb_data_chunk_get_column_count(input);
-
-    // Extra shenanigans to test duckdb_scalar_function_set_error.
-    if (column_count == 0) {
-        duckdb_scalar_function_set_error(info, "please provide at least one input parameter");
-        return;
-    }
-
-    // Extract the validity masks.
-    uint64_t **validity_masks = (uint64_t **)malloc(column_count * sizeof(uint64_t *));
-    if (validity_masks == NULL) {
-        duckdb_function_set_error(info, "validity_masks does not work");
-        return;
-    }
-
-    for (idx_t i = 0; i < column_count; i++) {
-        duckdb_vector col = duckdb_data_chunk_get_vector(input, i);
-        validity_masks[i] = (uint64_t *)duckdb_vector_get_validity(col);
-    }
-
-    uint64_t *result_data = duckdb_vector_get_data(output);
-    for (idx_t row_idx = 0; row_idx < input_size; row_idx++) {
-        idx_t null_count = 0;
-        for (idx_t col_idx = 0; col_idx < column_count; col_idx++) {
-            if (!duckdb_validity_row_is_valid(validity_masks[col_idx], row_idx)) {
-                null_count++;
-            }
-        }
-        result_data[row_idx] = null_count;
-    }
-    free(validity_masks);
+//    idx_t input_size = duckdb_data_chunk_get_size(input);
+//    idx_t column_count = duckdb_data_chunk_get_column_count(input);
+//
+//    // Extra shenanigans to test duckdb_scalar_function_set_error.
+//    if (column_count == 0) {
+//        duckdb_scalar_function_set_error(info, "please provide at least one input parameter");
+//        return;
+//    }
+//
+//    // Extract the validity masks.
+//    uint64_t **validity_masks = (uint64_t **)malloc(column_count * sizeof(uint64_t *));
+//    if (validity_masks == NULL) {
+//        duckdb_function_set_error(info, "validity_masks does not work");
+//        return;
+//    }
+//
+//    for (idx_t i = 0; i < column_count; i++) {
+//        duckdb_vector col = duckdb_data_chunk_get_vector(input, i);
+//        validity_masks[i] = (uint64_t *)duckdb_vector_get_validity(col);
+//    }
+//
+//    uint64_t *result_data = duckdb_vector_get_data(output);
+//    for (idx_t row_idx = 0; row_idx < input_size; row_idx++) {
+//        idx_t null_count = 0;
+//        for (idx_t col_idx = 0; col_idx < column_count; col_idx++) {
+//            if (!duckdb_validity_row_is_valid(validity_masks[col_idx], row_idx)) {
+//                null_count++;
+//            }
+//        }
+//        result_data[row_idx] = null_count;
+//    }
+//    free(validity_masks);
 }
 
 duckdb_state RegisterVariadicAnyScalarFunction(duckdb_connection connection) {

@@ -4,34 +4,52 @@
 
 require reference_extension_c
 
+## RegisterExtraInfoScalarFunction
+#
+#query I
+#SELECT capi_extra_info_scalar_function('hello');
+#----
+#prefix_hello
+#
+#query I
+#SELECT COUNT(1) FROM range(0, 5000) WHERE len(capi_extra_info_scalar_function(range::VARCHAR)) = 10;
+#----
+#900
+#
+## RegisterScalarFunctionSetFunction
+#
+#query II
+#SELECT variadic_addition_set(42, 42), variadic_addition_set(42, 42, 42);
+#----
+#84
+#126
+#
+## RegisterVariadicAnyScalarFunction
+#
+#query I
+#SELECT capi_variadic_any_scalar_function(NULL, 42, [1, 2, 3], NULL);
+#----
+#2
+#
+#statement error
+#SELECT capi_variadic_any_scalar_function();
+#----
+#Invalid Input Error: please provide at least one input parameter
+
 # RegisterExtraInfoScalarFunction
 
-query I
+statement ok
 SELECT capi_extra_info_scalar_function('hello');
-----
-prefix_hello
 
-query I
+statement ok
 SELECT COUNT(1) FROM range(0, 5000) WHERE len(capi_extra_info_scalar_function(range::VARCHAR)) = 10;
-----
-900
 
 # RegisterScalarFunctionSetFunction
 
-query II
+statement ok
 SELECT variadic_addition_set(42, 42), variadic_addition_set(42, 42, 42);
-----
-84
-126
 
 # RegisterVariadicAnyScalarFunction
 
-query I
+statement ok
 SELECT capi_variadic_any_scalar_function(NULL, 42, [1, 2, 3], NULL);
-----
-2
-
-statement error
-SELECT capi_variadic_any_scalar_function();
-----
-Invalid Input Error: please provide at least one input parameter
