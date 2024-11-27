@@ -8,7 +8,7 @@ DUCKDB_EXTENSION_EXTERN
 
 void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector output) {
 //    const char *extra_info = (const char *)duckdb_scalar_function_get_extra_info(info);
-    idx_t extra_info_len = 7;
+//    idx_t extra_info_len = 7;
 
     // Set up input.
     idx_t input_size = duckdb_data_chunk_get_size(input);
@@ -17,12 +17,16 @@ void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_v
 
     // NOTE: For simplicity, we assume there are no NULL values.
     // See CountNULL for NULL value handling.
+    idx_t count = 0;
     for (idx_t row = 0; row < input_size; row++) {
         duckdb_string_t input_char = input_data[row];
 
 //        // Determine the result string length.
-        idx_t result_len = extra_info_len;
+//        idx_t result_len = extra_info_len;
         bool is_inlined = duckdb_string_is_inlined(input_char);
+        if (is_inlined) {
+            count++;
+        }
 //        if (is_inlined) {
 //            result_len += input_char.value.inlined.length;
 //        } else {
@@ -30,10 +34,10 @@ void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_v
 //        }
 //
 //        // Create the result string.
-if (is_inlined) {
-    char *result = (char *)malloc(result_len * sizeof(char));
-    free(result);
-}
+//if (is_inlined) {
+//    char *result = (char *)malloc(result_len * sizeof(char));
+//    free(result);
+//}
 
 //        strcpy(result, extra_info);
 //        if (is_inlined) {
