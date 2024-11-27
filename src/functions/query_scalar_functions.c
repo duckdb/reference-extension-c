@@ -1,7 +1,6 @@
 #include "duckdb_extension.h"
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 DUCKDB_EXTENSION_EXTERN
 

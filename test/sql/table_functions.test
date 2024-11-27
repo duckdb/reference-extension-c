@@ -1,0 +1,22 @@
+# name: test/sql/table_functions.test
+# description: Test the C API table function functions
+# group: [extensions]
+
+require reference_extension_c
+
+# RegisterErrorTableFunctions
+
+statement error
+FROM capi_bind_error_table_function(1);
+----
+Binder Error: my bind error message
+
+statement error
+FROM capi_init_error_table_function(1);
+----
+Invalid Input Error: my init error message
+
+statement error
+FROM capi_function_error_table_function(1);
+----
+Invalid Input Error: my function error message

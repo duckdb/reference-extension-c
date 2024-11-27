@@ -3,6 +3,7 @@ add_library(
         OBJECT
         query_library_version.c
         query_scalar_functions.c
+        query_table_functions.c
 )
 
 set(ALL_OBJECT_FILES
