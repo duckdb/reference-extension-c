@@ -23,15 +23,15 @@ require reference_extension_c
 #----
 #84
 #126
-#
-## RegisterVariadicAnyScalarFunction
-#
-#query I
-#SELECT capi_variadic_any_scalar_function(NULL, 42, [1, 2, 3], NULL);
-#----
-#2
-#
-#statement error
-#SELECT capi_variadic_any_scalar_function();
-#----
-#Invalid Input Error: please provide at least one input parameter
+
+# RegisterVariadicAnyScalarFunction
+
+query I
+SELECT capi_variadic_any_scalar_function(NULL, 42, [1, 2, 3], NULL);
+----
+2
+
+statement error
+SELECT capi_variadic_any_scalar_function();
+----
+Invalid Input Error: please provide at least one input parameter
