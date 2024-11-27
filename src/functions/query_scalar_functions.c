@@ -7,7 +7,7 @@ DUCKDB_EXTENSION_EXTERN
 // FIXME: strcpy causes a warning on Windows. C99 does not have strcpy_s.
 
 void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector output) {
-    const char *extra_info = (const char *)duckdb_scalar_function_get_extra_info(info);
+//    const char *extra_info = (const char *)duckdb_scalar_function_get_extra_info(info);
     idx_t extra_info_len = 7;
 
     // Set up input.
@@ -20,27 +20,31 @@ void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_v
     for (idx_t row = 0; row < input_size; row++) {
         duckdb_string_t input_char = input_data[row];
 
-        // Determine the result string length.
+//        // Determine the result string length.
         idx_t result_len = extra_info_len;
         bool is_inlined = duckdb_string_is_inlined(input_char);
-        if (is_inlined) {
-            result_len += input_char.value.inlined.length;
-        } else {
-            result_len += input_char.value.pointer.length;
-        }
+//        if (is_inlined) {
+//            result_len += input_char.value.inlined.length;
+//        } else {
+//            result_len += input_char.value.pointer.length;
+//        }
+//
+//        // Create the result string.
+if (is_inlined) {
+    char *result = (char *)malloc(result_len * sizeof(char));
+    free(result);
+}
 
-        // Create the result string.
-        char *result = (char *)malloc(result_len);
-        strcpy(result, extra_info);
-        if (is_inlined) {
-            strcpy(result + extra_info_len, input_char.value.inlined.inlined);
-        } else {
-            strcpy(result + extra_info_len, input_char.value.pointer.ptr);
-        }
+//        strcpy(result, extra_info);
+//        if (is_inlined) {
+//            strcpy(result + extra_info_len, input_char.value.inlined.inlined);
+//        } else {
+//            strcpy(result + extra_info_len, input_char.value.pointer.ptr);
+//        }
+//
+//        // Assign and free.
+//        duckdb_vector_assign_string_element_len(output, row, result, result_len);
 
-        // Assign and free.
-        duckdb_vector_assign_string_element_len(output, row, result, result_len);
-        free(result);
     }
 }
 

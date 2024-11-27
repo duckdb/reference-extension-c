@@ -4,13 +4,11 @@
 
 require reference_extension_c
 
-## RegisterExtraInfoScalarFunction
-#
-#query I
-#SELECT capi_extra_info_scalar_function('hello');
-#----
-#prefix_hello
-#
+# RegisterExtraInfoScalarFunction
+
+statement ok
+SELECT capi_extra_info_scalar_function('hello');
+
 #query I
 #SELECT COUNT(1) FROM range(0, 5000) WHERE len(capi_extra_info_scalar_function(range::VARCHAR)) = 10;
 #----
