@@ -45,24 +45,23 @@ void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_v
 }
 
 duckdb_state RegisterExtraInfoScalarFunction(duckdb_connection connection) {
-    return DuckDBSuccess;
-//    duckdb_scalar_function function = duckdb_create_scalar_function();
-//    duckdb_scalar_function_set_name(function, "capi_extra_info_scalar_function");
-//
-//    char *prefix = (char *)malloc(8 * sizeof(char));
-//    strcpy(prefix, "prefix_");
-//
-//    duckdb_logical_type type = duckdb_create_logical_type(DUCKDB_TYPE_VARCHAR);
-//    duckdb_scalar_function_add_parameter(function, type);
-//    duckdb_scalar_function_set_return_type(function, type);
-//    duckdb_destroy_logical_type(&type);
-//
-//    duckdb_scalar_function_set_function(function, AppendToPrefix);
-//    duckdb_scalar_function_set_extra_info(function, (duckdb_function_info)prefix, free);
-//
-//    duckdb_state state = duckdb_register_scalar_function(connection, function);
-//    duckdb_destroy_scalar_function(&function);
-//    return state;
+    duckdb_scalar_function function = duckdb_create_scalar_function();
+    duckdb_scalar_function_set_name(function, "capi_extra_info_scalar_function");
+
+    char *prefix = (char *)malloc(8 * sizeof(char));
+    strcpy(prefix, "prefix_");
+
+    duckdb_logical_type type = duckdb_create_logical_type(DUCKDB_TYPE_VARCHAR);
+    duckdb_scalar_function_add_parameter(function, type);
+    duckdb_scalar_function_set_return_type(function, type);
+    duckdb_destroy_logical_type(&type);
+
+    duckdb_scalar_function_set_function(function, AppendToPrefix);
+    duckdb_scalar_function_set_extra_info(function, (duckdb_function_info)prefix, free);
+
+    duckdb_state state = duckdb_register_scalar_function(connection, function);
+    duckdb_destroy_scalar_function(&function);
+    return state;
 }
 
 void VariadicAddition(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector output) {
