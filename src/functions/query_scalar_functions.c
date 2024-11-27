@@ -109,20 +109,19 @@ duckdb_scalar_function GetVariadicAdditionScalarFunction(duckdb_connection conne
 }
 
 duckdb_state RegisterScalarFunctionSetFunction(duckdb_connection connection) {
-    return DuckDBSuccess;
-//    duckdb_scalar_function_set function_set = duckdb_create_scalar_function_set("variadic_addition_set");
-//
-//    duckdb_scalar_function function = GetVariadicAdditionScalarFunction(connection, "capi_add_two_scalar_function", 2);
-//    duckdb_add_scalar_function_to_set(function_set, function);
-//    duckdb_destroy_scalar_function(&function);
-//
-//    function = GetVariadicAdditionScalarFunction(connection, "capi_add_three_scalar_function", 3);
-//    duckdb_add_scalar_function_to_set(function_set, function);
-//    duckdb_destroy_scalar_function(&function);
-//
-//    duckdb_state state = duckdb_register_scalar_function_set(connection, function_set);
-//    duckdb_destroy_scalar_function_set(&function_set);
-//    return state;
+    duckdb_scalar_function_set function_set = duckdb_create_scalar_function_set("variadic_addition_set");
+
+    duckdb_scalar_function function = GetVariadicAdditionScalarFunction(connection, "capi_add_two_scalar_function", 2);
+    duckdb_add_scalar_function_to_set(function_set, function);
+    duckdb_destroy_scalar_function(&function);
+
+    function = GetVariadicAdditionScalarFunction(connection, "capi_add_three_scalar_function", 3);
+    duckdb_add_scalar_function_to_set(function_set, function);
+    duckdb_destroy_scalar_function(&function);
+
+    duckdb_state state = duckdb_register_scalar_function_set(connection, function_set);
+    duckdb_destroy_scalar_function_set(&function_set);
+    return state;
 }
 
 void CountNULL(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector output) {
