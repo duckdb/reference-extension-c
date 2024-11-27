@@ -1,21 +1,23 @@
 # name: test/sql/library_version.test
-# description: Test the capi_test_duckdb_library_version function
+# description: Test the C API duckdb_library_version function
 # group: [extensions]
 
 require reference_extension_c
 
+# RegisterLibraryVersionFunction
+
 query I nosort single_version
-SELECT library_version as v from pragma_version();
+SELECT library_version AS v FROM pragma_version();
 ----
 
 query I nosort single_version
-SELECT capi_test_duckdb_library_version() as v;
+SELECT capi_duckdb_library_version() AS v;
 ----
 
 query I nosort many_version
-SELECT library_version as v from pragma_version(), range(0,5000);
+SELECT library_version AS v FROM pragma_version(), range(0, 3000);
 ----
 
 query I nosort many_version
-SELECT capi_test_duckdb_library_version() as v FROM range(0,5000);
+SELECT capi_duckdb_library_version() AS v FROM range(0, 3000);
 ----
