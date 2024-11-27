@@ -7,48 +7,44 @@ DUCKDB_EXTENSION_EXTERN
 // FIXME: strcpy causes a warning on Windows. C99 does not have strcpy_s.
 
 void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector output) {
-//    const char *extra_info = (const char *)duckdb_scalar_function_get_extra_info(info);
-//    idx_t extra_info_len = 7;
+    const char *extra_info = (const char *)duckdb_scalar_function_get_extra_info(info);
+    idx_t extra_info_len = 11 * sizeof(char);
 
     // Set up input.
     idx_t input_size = duckdb_data_chunk_get_size(input);
-    duckdb_vector input_vector = duckdb_data_chunk_get_vector(input, 0);
-	duckdb_string_t *input_data = (duckdb_string_t *)duckdb_vector_get_data(input_vector);
+//    duckdb_vector input_vector = duckdb_data_chunk_get_vector(input, 0);
+//	duckdb_string_t *input_data = (duckdb_string_t *)duckdb_vector_get_data(input_vector);
 
-    // NOTE: For simplicity, we assume there are no NULL values.
-    // See CountNULL for NULL value handling.
-    idx_t count = 0;
+//    // NOTE: For simplicity, we assume there are no NULL values.
+//    // See CountNULL for NULL value handling.
     for (idx_t row = 0; row < input_size; row++) {
-        duckdb_string_t input_char = input_data[row];
-
-//        // Determine the result string length.
-//        idx_t result_len = extra_info_len;
-        bool is_inlined = duckdb_string_is_inlined(input_char);
-        if (is_inlined) {
-            count++;
-        }
-//        if (is_inlined) {
-//            result_len += input_char.value.inlined.length;
-//        } else {
-//            result_len += input_char.value.pointer.length;
-//        }
+//        duckdb_string_t input_char = input_data[row];
 //
-//        // Create the result string.
-//if (is_inlined) {
-//    char *result = (char *)malloc(result_len * sizeof(char));
-//    free(result);
-//}
-
-//        strcpy(result, extra_info);
-//        if (is_inlined) {
-//            strcpy(result + extra_info_len, input_char.value.inlined.inlined);
-//        } else {
-//            strcpy(result + extra_info_len, input_char.value.pointer.ptr);
-//        }
+////        // Determine the result string length.
+////        idx_t result_len = extra_info_len;
+////        bool is_inlined = duckdb_string_is_inlined(input_char);
+////        if (is_inlined) {
+////            result_len += input_char.value.inlined.length;
+////        } else {
+////            result_len += input_char.value.pointer.length;
+////        }
+////
+////        // Create the result string.
+////if (is_inlined) {
+////    char *result = (char *)malloc(result_len * sizeof(char));
+////    free(result);
+////}
 //
-//        // Assign and free.
-//        duckdb_vector_assign_string_element_len(output, row, result, result_len);
-
+////        strcpy(result, extra_info);
+////        if (is_inlined) {
+////            strcpy(result + extra_info_len, input_char.value.inlined.inlined);
+////        } else {
+////            strcpy(result + extra_info_len, input_char.value.pointer.ptr);
+////        }
+////
+////        // Assign and free.
+        duckdb_vector_assign_string_element_len(output, row, extra_info, extra_info_len - 1 * sizeof(char));
+//
     }
 }
 
@@ -56,8 +52,8 @@ duckdb_state RegisterExtraInfoScalarFunction(duckdb_connection connection) {
     duckdb_scalar_function function = duckdb_create_scalar_function();
     duckdb_scalar_function_set_name(function, "capi_extra_info_scalar_function");
 
-    char *prefix = (char *)malloc(8 * sizeof(char));
-    strcpy(prefix, "prefix_");
+    char *prefix = (char *)malloc(11 * sizeof(char));
+    strcpy(prefix, "extra_info");
 
     duckdb_logical_type type = duckdb_create_logical_type(DUCKDB_TYPE_VARCHAR);
     duckdb_scalar_function_add_parameter(function, type);
