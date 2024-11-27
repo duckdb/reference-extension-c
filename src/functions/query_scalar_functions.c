@@ -45,7 +45,7 @@ void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_v
 }
 
 duckdb_state RegisterExtraInfoScalarFunction(duckdb_connection connection) {
-    return;
+    return DuckDBSuccess;
 //    duckdb_scalar_function function = duckdb_create_scalar_function();
 //    duckdb_scalar_function_set_name(function, "capi_extra_info_scalar_function");
 //
@@ -109,7 +109,7 @@ duckdb_scalar_function GetVariadicAdditionScalarFunction(duckdb_connection conne
 }
 
 duckdb_state RegisterScalarFunctionSetFunction(duckdb_connection connection) {
-    return;
+    return DuckDBSuccess;
 //    duckdb_scalar_function_set function_set = duckdb_create_scalar_function_set("variadic_addition_set");
 //
 //    duckdb_scalar_function function = GetVariadicAdditionScalarFunction(connection, "capi_add_two_scalar_function", 2);
@@ -161,7 +161,7 @@ void CountNULL(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector
 }
 
 duckdb_state RegisterVariadicAnyScalarFunction(duckdb_connection connection) {
-    return;
+    return DuckDBSuccess;
 //    duckdb_scalar_function function = duckdb_create_scalar_function();
 //    duckdb_scalar_function_set_name(function, "capi_variadic_any_scalar_function");
 //
