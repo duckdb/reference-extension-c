@@ -11,6 +11,11 @@ SELECT capi_extra_info_scalar_function('hello');
 ----
 extra_info
 
+query I
+SELECT capi_extra_info_scalar_function('hello I am not indxvdsfgdsfgdsfgfdsgfdlined');
+----
+extra
+
 #query I
 #SELECT COUNT(1) FROM range(0, 5000) WHERE len(capi_extra_info_scalar_function(range::VARCHAR)) = 10;
 #----

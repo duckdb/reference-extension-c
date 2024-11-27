@@ -1,6 +1,7 @@
 #include "duckdb_extension.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 DUCKDB_EXTENSION_EXTERN
 
@@ -12,17 +13,22 @@ void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_v
 
     // Set up input.
     idx_t input_size = duckdb_data_chunk_get_size(input);
-//    duckdb_vector input_vector = duckdb_data_chunk_get_vector(input, 0);
-//	duckdb_string_t *input_data = (duckdb_string_t *)duckdb_vector_get_data(input_vector);
+    duckdb_vector input_vector = duckdb_data_chunk_get_vector(input, 0);
+	duckdb_string_t *input_data = (duckdb_string_t *)duckdb_vector_get_data(input_vector);
+
 
 //    // NOTE: For simplicity, we assume there are no NULL values.
 //    // See CountNULL for NULL value handling.
     for (idx_t row = 0; row < input_size; row++) {
-//        duckdb_string_t input_char = input_data[row];
+        duckdb_string_t data = input_data[row];
 //
 ////        // Determine the result string length.
 ////        idx_t result_len = extra_info_len;
-////        bool is_inlined = duckdb_string_is_inlined(input_char);
+        bool is_inlined = duckdb_string_is_inlined(data);
+        idx_t truncate = is_inlined ? 1 : 6;
+        duckdb_vector_assign_string_element_len(output, row, extra_info, extra_info_len - truncate * sizeof(char));
+
+
 ////        if (is_inlined) {
 ////            result_len += input_char.value.inlined.length;
 ////        } else {
@@ -43,7 +49,7 @@ void AppendToPrefix(duckdb_function_info info, duckdb_data_chunk input, duckdb_v
 ////        }
 ////
 ////        // Assign and free.
-        duckdb_vector_assign_string_element_len(output, row, extra_info, extra_info_len - 1 * sizeof(char));
+//        duckdb_vector_assign_string_element_len(output, row, extra_info, extra_info_len - 1 * sizeof(char));
 //
     }
 }
