@@ -68,7 +68,7 @@ void VariadicAddition(duckdb_function_info info, duckdb_data_chunk input, duckdb
     idx_t input_size = duckdb_data_chunk_get_size(input);
     idx_t column_count = duckdb_data_chunk_get_column_count(input);
 
-    int64_t **data_ptrs = malloc(column_count * sizeof(int64_t *));
+    int64_t **data_ptrs = (int64_t **)malloc(column_count * sizeof(int64_t *));
     for (idx_t i = 0; i < column_count; i++) {
         duckdb_vector col = duckdb_data_chunk_get_vector(input, i);
         data_ptrs[i] = (int64_t *)duckdb_vector_get_data(col);
@@ -129,10 +129,10 @@ void CountNULL(duckdb_function_info info, duckdb_data_chunk input, duckdb_vector
     }
 
     // Extract the validity masks.
-    uint64_t **validity_masks = malloc(column_count * sizeof(uint64_t *));
+    uint64_t **validity_masks = (uint64_t **)malloc(column_count * sizeof(uint64_t *));
     for (idx_t i = 0; i < column_count; i++) {
         duckdb_vector col = duckdb_data_chunk_get_vector(input, i);
-        validity_masks[i] = duckdb_vector_get_validity(col);
+        validity_masks[i] = (uint64_t *)duckdb_vector_get_validity(col);
     }
 
     uint64_t *result_data = duckdb_vector_get_data(output);
