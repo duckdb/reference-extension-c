@@ -4,10 +4,14 @@ PROJ_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 # Main extension configuration
 EXTENSION_NAME=reference_extension_c
-MINIMUM_DUCKDB_VERSION_MAJOR=0
-MINIMUM_DUCKDB_VERSION_MINOR=0
-MINIMUM_DUCKDB_VERSION_PATCH=1
-MINIMUM_DUCKDB_VERSION=v$(MINIMUM_DUCKDB_VERSION_MAJOR).$(MINIMUM_DUCKDB_VERSION_MINOR).$(MINIMUM_DUCKDB_VERSION_PATCH)
+
+# Set to 1 to enable Unstable API (binaries will only work on TARGET_DUCKDB_VERSION, forwards compatibility will be broken)
+# WARNING: When set to 1, the duckdb_extension.h from the TARGET_DUCKDB_VERSION must be used, using any other version of
+#          the header is unsafe.
+USE_UNSTABLE_C_API=0
+
+# The DuckDB version to target
+TARGET_DUCKDB_VERSION=v1.2.0
 
 all: configure release
 
@@ -25,4 +29,4 @@ test_debug: test_extension_debug
 test_release: test_extension_release
 
 clean: clean_build clean_cmake
-clean_all: clean_configure clean
+clean_all: clean clean_configure
