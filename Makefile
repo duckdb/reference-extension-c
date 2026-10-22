@@ -11,7 +11,7 @@ EXTENSION_NAME=reference_extension_c
 USE_UNSTABLE_C_API=0
 
 # The DuckDB version to target
-TARGET_DUCKDB_VERSION=v2.0.0
+TARGET_DUCKDB_VERSION=v1.2.0
 
 all: configure release
 
